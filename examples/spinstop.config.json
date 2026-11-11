@@ -1,0 +1,12 @@
+{
+  "window": 20,
+  "escalation": { "warn": 2, "block": 3, "stop": 5 },
+  "near": { "ignoreKeys": ["sessionId"] },
+  "cycle": { "maxPeriod": 4 },
+  "noProgress": { "warnAfter": 3, "stopAfter": 5 },
+  "tools": {
+    "poll_job": { "exempt": true },
+    "search": { "ignore": ["filters.since"] },
+    "send_email": { "maxCalls": 3 }
+  }
+}

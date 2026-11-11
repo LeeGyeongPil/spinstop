@@ -1,0 +1,198 @@
+[
+  {
+    "stepNumber": 0,
+    "content": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call-1",
+        "toolName": "search",
+        "input": {
+          "query": "weather seoul",
+          "ts": 1731300001
+        }
+      },
+      {
+        "type": "tool-result",
+        "toolCallId": "call-1",
+        "toolName": "search",
+        "input": {
+          "query": "weather seoul",
+          "ts": 1731300001
+        },
+        "output": {
+          "hits": []
+        },
+        "dynamic": false
+      }
+    ],
+    "finishReason": "tool-calls"
+  },
+  {
+    "stepNumber": 1,
+    "content": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call-2",
+        "toolName": "search",
+        "input": {
+          "query": "Seoul  weather",
+          "ts": 1731300002
+        }
+      },
+      {
+        "type": "tool-result",
+        "toolCallId": "call-2",
+        "toolName": "search",
+        "input": {
+          "query": "Seoul  weather",
+          "ts": 1731300002
+        },
+        "output": {
+          "hits": []
+        },
+        "dynamic": false
+      }
+    ],
+    "finishReason": "tool-calls"
+  },
+  {
+    "stepNumber": 2,
+    "content": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call-3",
+        "toolName": "search",
+        "input": {
+          "query": "SEOUL weather",
+          "ts": 1731300003
+        }
+      },
+      {
+        "type": "tool-result",
+        "toolCallId": "call-3",
+        "toolName": "search",
+        "input": {
+          "query": "SEOUL weather",
+          "ts": 1731300003
+        },
+        "output": {
+          "hits": []
+        },
+        "dynamic": false
+      }
+    ],
+    "finishReason": "tool-calls"
+  },
+  {
+    "stepNumber": 3,
+    "content": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call-4",
+        "toolName": "search",
+        "input": {
+          "query": "weather   Seoul",
+          "ts": 1731300004
+        }
+      },
+      {
+        "type": "tool-result",
+        "toolCallId": "call-4",
+        "toolName": "search",
+        "input": {
+          "query": "weather   Seoul",
+          "ts": 1731300004
+        },
+        "output": {
+          "hits": []
+        },
+        "dynamic": false
+      }
+    ],
+    "finishReason": "tool-calls"
+  },
+  {
+    "stepNumber": 4,
+    "content": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call-5",
+        "toolName": "search",
+        "input": {
+          "query": "weather seoul",
+          "ts": 1731300005
+        }
+      },
+      {
+        "type": "tool-result",
+        "toolCallId": "call-5",
+        "toolName": "search",
+        "input": {
+          "query": "weather seoul",
+          "ts": 1731300005
+        },
+        "output": {
+          "hits": []
+        },
+        "dynamic": false
+      }
+    ],
+    "finishReason": "tool-calls"
+  },
+  {
+    "stepNumber": 5,
+    "content": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call-6",
+        "toolName": "search",
+        "input": {
+          "query": "Seoul  weather",
+          "ts": 1731300006
+        }
+      },
+      {
+        "type": "tool-result",
+        "toolCallId": "call-6",
+        "toolName": "search",
+        "input": {
+          "query": "Seoul  weather",
+          "ts": 1731300006
+        },
+        "output": {
+          "hits": []
+        },
+        "dynamic": false
+      }
+    ],
+    "finishReason": "tool-calls"
+  },
+  {
+    "stepNumber": 6,
+    "content": [
+      {
+        "type": "tool-call",
+        "toolCallId": "call-7",
+        "toolName": "search",
+        "input": {
+          "query": "SEOUL weather",
+          "ts": 1731300007
+        }
+      },
+      {
+        "type": "tool-result",
+        "toolCallId": "call-7",
+        "toolName": "search",
+        "input": {
+          "query": "SEOUL weather",
+          "ts": 1731300007
+        },
+        "output": {
+          "hits": []
+        },
+        "dynamic": false
+      }
+    ],
+    "finishReason": "tool-calls"
+  }
+]

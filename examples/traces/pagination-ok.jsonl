@@ -1,0 +1,8 @@
+{"step":1,"toolName":"list_orders","input":{"page":1,"pageSize":2},"output":{"page":1,"orders":["order-1","order-2"]}}
+{"step":2,"toolName":"list_orders","input":{"page":2,"pageSize":2},"output":{"page":2,"orders":["order-3","order-4"]}}
+{"step":3,"toolName":"list_orders","input":{"page":3,"pageSize":2},"output":{"page":3,"orders":["order-5","order-6"]}}
+{"step":4,"toolName":"list_orders","input":{"page":4,"pageSize":2},"output":{"page":4,"orders":["order-7","order-8"]}}
+{"step":5,"toolName":"list_orders","input":{"page":5,"pageSize":2},"output":{"page":5,"orders":["order-9","order-10"]}}
+{"step":6,"toolName":"list_orders","input":{"page":6,"pageSize":2},"output":{"page":6,"orders":["order-11","order-12"]}}
+{"step":7,"toolName":"list_orders","input":{"page":7,"pageSize":2},"output":{"page":7,"orders":["order-13","order-14"]}}
+{"step":8,"toolName":"list_orders","input":{"page":8,"pageSize":2},"output":{"page":8,"orders":["order-15"]}}

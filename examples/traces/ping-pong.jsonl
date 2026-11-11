@@ -1,0 +1,8 @@
+{"step":1,"toolName":"search_docs","input":{"query":"auth token header"},"output":{"results":["/docs/auth"]}}
+{"step":2,"toolName":"open_page","input":{"url":"/docs/auth"},"output":"Auth: see the Tokens page."}
+{"step":3,"toolName":"search_docs","input":{"query":"auth token header"},"output":{"results":["/docs/auth"]}}
+{"step":4,"toolName":"open_page","input":{"url":"/docs/auth"},"output":"Auth: see the Tokens page."}
+{"step":5,"toolName":"search_docs","input":{"query":"auth token header"},"output":{"results":["/docs/auth"]}}
+{"step":6,"toolName":"open_page","input":{"url":"/docs/auth"},"output":"Auth: see the Tokens page."}
+{"step":7,"toolName":"search_docs","input":{"query":"auth token header"},"output":{"results":["/docs/auth"]}}
+{"step":8,"toolName":"open_page","input":{"url":"/docs/auth"},"output":"Auth: see the Tokens page."}
