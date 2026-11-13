@@ -5,46 +5,76 @@
 import { readFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { rank } from './rules/shared.js';
-import { loadTrace } from './replay/load.js';
+import { TraceError, loadTrace } from './replay/load.js';
 import { replayTrace } from './replay/run.js';
 import { renderJson, renderTable } from './replay/render.js';
+import { MESSAGES, isLangValue, resolveLang, type Lang, type Messages } from './i18n.js';
 import type { Action, LoopGuardOptions } from './types.js';
-
-const HELP = `spinstop — stop AI agents from spinning on repeated tool calls
-
-Usage:
-  spinstop replay <trace> [--config <file.json>] [--fail-on warn|block|stop] [--format table|json]
-  spinstop --help | --version
-
-replay  Feed a recorded run through the loop guard and show, per tool call,
-        what spinstop would have done (allow / warn / block / stop).
-
-Trace formats:
-  - AI SDK steps:  JSON.stringify(result.steps)  (or a result object with "steps")
-  - JSONL records: {"step":1,"toolName":"search","input":{...},"output":...,"isError":false}
-
-Options:
-  -c, --config   JSON file with LoopGuardOptions (window, escalation, near, cycle, noProgress, tools)
-      --fail-on  exit with code 1 if any call reaches this level (for CI)
-      --format   table (default) or json
-`;
 
 function readVersion(): string {
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version?: string };
   return pkg.version ?? '0.0.0';
 }
 
-function readConfig(file: string | undefined): LoopGuardOptions {
+function readConfig(file: string | undefined, m: Messages): LoopGuardOptions {
   if (!file) return {};
   const value: unknown = JSON.parse(readFileSync(file, 'utf8'));
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${file}: config must be a JSON object`);
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new Error(m.configNotObject(file));
   return value as LoopGuardOptions;
 }
 
-export function main(argv: string[]): number {
+/** Pulls `--lang <v>` / `--lang=<v>` out of argv (any position, before a bare `--`). */
+function extractLang(argv: string[]): { rest: string[]; value?: string; missing: boolean } {
+  const rest: string[] = [];
+  let value: string | undefined;
+  let missing = false;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i]!;
+    if (arg === '--') {
+      rest.push(...argv.slice(i));
+      break;
+    }
+    if (arg === '--lang') {
+      const next = argv[i + 1];
+      if (next === undefined) missing = true;
+      else {
+        value = next;
+        i++;
+      }
+    } else if (arg.startsWith('--lang=')) {
+      value = arg.slice('--lang='.length);
+    } else rest.push(arg);
+  }
+  return { rest, value, missing };
+}
+
+/** Translates a trace input error; other errors pass through unchanged. */
+function translate(err: unknown, m: Messages): unknown {
+  if (!(err instanceof TraceError)) return err;
+  switch (err.code) {
+    case 'empty':
+      return new Error(m.traceEmpty);
+    case 'unrecognized':
+      return new Error(m.traceUnrecognized);
+    case 'line-not-json':
+      return new Error(m.traceLineNotJson(err.line ?? 0));
+    default:
+      return new Error(m.traceLineNotRecord(err.line ?? 0));
+  }
+}
+
+export function main(rawArgv: string[]): number {
+  const { rest: argv, value: langFlag, missing } = extractLang(rawArgv);
+  // An unusable --lang is reported in the language the environment would pick.
+  const envLang: Lang = resolveLang(undefined);
+  if (missing) throw new Error(MESSAGES[envLang].langNeedsValue);
+  if (langFlag !== undefined && !isLangValue(langFlag)) throw new Error(MESSAGES[envLang].langInvalid(langFlag));
+  const lang = resolveLang(langFlag);
+  const m = MESSAGES[lang];
+
   const [command, ...rest] = argv;
   if (command === undefined || command === '-h' || command === '--help' || command === 'help') {
-    process.stdout.write(HELP);
+    process.stdout.write(m.help);
     return 0;
   }
   if (command === '-v' || command === '--version') {
@@ -52,7 +82,7 @@ export function main(argv: string[]): number {
     return 0;
   }
   if (command !== 'replay') {
-    process.stderr.write(`spinstop: unknown command "${command}"\n\n${HELP}`);
+    process.stderr.write(`spinstop: ${m.unknownCommand(command)}\n\n${m.help}`);
     return 2;
   }
 
@@ -67,18 +97,24 @@ export function main(argv: string[]): number {
     },
   });
   if (values.help) {
-    process.stdout.write(HELP);
+    process.stdout.write(m.help);
     return 0;
   }
   const file = positionals[0];
-  if (!file) throw new Error('replay needs a trace file');
+  if (!file) throw new Error(m.needsTraceFile);
 
   const failOn = values['fail-on'] as Action | undefined;
-  if (failOn !== undefined && !['warn', 'block', 'stop'].includes(failOn)) throw new Error('--fail-on must be warn, block or stop');
-  if (values.format !== 'table' && values.format !== 'json') throw new Error('--format must be table or json');
+  if (failOn !== undefined && !['warn', 'block', 'stop'].includes(failOn)) throw new Error(m.failOnInvalid);
+  if (values.format !== 'table' && values.format !== 'json') throw new Error(m.formatInvalid);
 
-  const result = replayTrace(loadTrace(file), readConfig(values.config));
-  process.stdout.write((values.format === 'json' ? renderJson(result, file) : renderTable(result, file)) + '\n');
+  let trace;
+  try {
+    trace = loadTrace(file);
+  } catch (err) {
+    throw translate(err, m);
+  }
+  const result = replayTrace(trace, readConfig(values.config, m));
+  process.stdout.write((values.format === 'json' ? renderJson(result, file) : renderTable(result, file, lang)) + '\n');
 
   if (failOn && rank(result.worst) >= rank(failOn)) return 1;
   return 0;

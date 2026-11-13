@@ -1,6 +1,6 @@
 {
   "name": "spinstop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Stop AI agents from spinning: detect repeated, near-repeated and cyclic tool calls and block them before the tool runs (Vercel AI SDK and OpenAI Agents JS adapters, replay CLI).",
   "type": "module",
   "license": "MIT",

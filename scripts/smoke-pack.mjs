@@ -15,6 +15,15 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 assert.equal(Object.keys(pkg.dependencies ?? {}).length, 0, 'dependencies must be empty');
 
+// 로케일 변수를 지워 호스트 언어와 무관하게 영어 도움말을 확인한다
+function englishEnv() {
+  const env = { ...process.env, LANG: 'C' };
+  delete env.SPINSTOP_LANG;
+  delete env.LC_ALL;
+  delete env.LC_MESSAGES;
+  return env;
+}
+
 const tmp = mkdtempSync(join(tmpdir(), 'spinstop-pack-'));
 try {
   // 1) 패키지 만들기(빌드는 check:pack 이 먼저 했다)
@@ -50,7 +59,7 @@ try {
   assert.match(imported, /imports ok/);
 
   // 4) bin
-  const help = execFileSync(npm, ['exec', '--no', '--', 'spinstop', '--help'], { cwd: app, encoding: 'utf8' });
+  const help = execFileSync(npm, ['exec', '--no', '--', 'spinstop', '--lang', 'en', '--help'], { cwd: app, encoding: 'utf8', env: englishEnv() });
   assert.match(help, /spinstop replay <trace>/);
 
   console.log(`packed ${filename} (${paths.length} files)`);

@@ -5,6 +5,29 @@
 import { readFileSync } from 'node:fs';
 import { callsOfStep } from '../steps.js';
 import type { ToolOutcome } from '../types.js';
+import { MESSAGES } from '../i18n.js';
+
+export type TraceErrorCode = 'empty' | 'unrecognized' | 'line-not-json' | 'line-not-record';
+
+/** A trace input problem. `message` is English; the CLI translates by `code` and `line`. */
+export class TraceError extends Error {
+  constructor(
+    readonly code: TraceErrorCode,
+    readonly line?: number,
+  ) {
+    const en = MESSAGES.en;
+    super(
+      code === 'empty'
+        ? en.traceEmpty
+        : code === 'unrecognized'
+          ? en.traceUnrecognized
+          : code === 'line-not-json'
+            ? en.traceLineNotJson(line ?? 0)
+            : en.traceLineNotRecord(line ?? 0),
+    );
+    this.name = 'TraceError';
+  }
+}
 
 export interface TraceCall {
   toolName: string;
@@ -52,7 +75,7 @@ function fromRecords(records: Loose[]): Trace {
 /** 글자에서 트레이스를 읽는다. 형식을 알 수 없으면 오류. */
 export function parseTrace(text: string): Trace {
   const trimmed = text.trim();
-  if (trimmed === '') throw new Error('trace is empty');
+  if (trimmed === '') throw new TraceError('empty');
 
   // 전체가 JSON 하나인지 먼저 본다.
   let whole: unknown;
@@ -73,7 +96,7 @@ export function parseTrace(text: string): Trace {
     } else if (looksLikeRecord(whole)) {
       return fromRecords([whole as Loose]);
     }
-    throw new Error('unrecognized JSON: expected AI SDK steps (an array of steps or { steps }) or tool-call records');
+    throw new TraceError('unrecognized');
   }
 
   // JSONL: 줄마다 기록 하나
@@ -84,9 +107,9 @@ export function parseTrace(text: string): Trace {
     try {
       value = JSON.parse(line);
     } catch {
-      throw new Error(`line ${i + 1}: not valid JSON`);
+      throw new TraceError('line-not-json', i + 1);
     }
-    if (!looksLikeRecord(value)) throw new Error(`line ${i + 1}: expected an object with "toolName"`);
+    if (!looksLikeRecord(value)) throw new TraceError('line-not-record', i + 1);
     records.push(value as Loose);
   });
   return fromRecords(records);
