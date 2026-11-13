@@ -1,0 +1,17 @@
+exit=0
+--stdout--
+spinstop replay: examples/traces/pagination-ok.jsonl
+JSONL records · 8 steps · 8 tool calls
+
+step  tool         action  rule  count  would run
+1     list_orders  allow   -     -      yes
+2     list_orders  allow   -     -      yes
+3     list_orders  allow   -     -      yes
+4     list_orders  allow   -     -      yes
+5     list_orders  allow   -     -      yes
+6     list_orders  allow   -     -      yes
+7     list_orders  allow   -     -      yes
+8     list_orders  allow   -     -      yes
+
+no loop detected
+--stderr--

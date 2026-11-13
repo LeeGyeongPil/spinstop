@@ -1,0 +1,4 @@
+exit=2
+--stdout--
+--stderr--
+spinstop: --format must be table or json

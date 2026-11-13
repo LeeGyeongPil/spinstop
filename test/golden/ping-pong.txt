@@ -1,0 +1,22 @@
+exit=0
+--stdout--
+spinstop replay: examples/traces/ping-pong.jsonl
+JSONL records · 8 steps · 8 tool calls
+
+step  tool         action  rule                                             count  would run
+1     search_docs  allow   -                                                -      yes
+2     open_page    allow   -                                                -      yes
+3     search_docs  warn    exact-repeat                                     2      yes
+4     open_page    warn    exact-repeat (+cycle)                            2      yes
+5     search_docs  block   exact-repeat (+near-repeat, cycle)               3      no
+5     (step end)   warn    no-progress                                      3      -
+6     open_page    block   exact-repeat (+near-repeat, cycle, no-progress)  3      no
+6     (step end)   warn    no-progress                                      4      -
+7     search_docs  block   exact-repeat (+near-repeat, cycle, no-progress)  4      no
+7     (step end)   stop    no-progress                                      5      -
+8     open_page    stop    no-progress                                      5      no
+
+first intervention: step 3 · first block: step 5 · stop: step 7
+saved 4 of 8 executions (calls the guard would not have run)
+message at step 5: spinstop: search_docs was called 3 times with the same arguments. The call was not run. Try a different approach or answer with what you have.
+--stderr--

@@ -1,0 +1,18 @@
+exit=1
+--stdout--
+spinstop replay: examples/traces/stuck-search.steps.json
+AI SDK steps · 7 steps · 7 tool calls
+
+step  tool    action  rule         count  would run
+1     search  allow   -            -      yes
+2     search  allow   -            -      yes
+3     search  block   near-repeat  3      no
+4     search  block   near-repeat  4      no
+5     search  stop    near-repeat  5      no
+6     search  stop    near-repeat  5      no
+7     search  stop    near-repeat  5      no
+
+first intervention: step 3 · first block: step 3 · stop: step 5
+saved 5 of 7 executions (calls the guard would not have run)
+message at step 3: spinstop: search was called 3 times with nearly the same arguments and returned nothing new. The call was not run. Try a different approach or answer with what you have.
+--stderr--

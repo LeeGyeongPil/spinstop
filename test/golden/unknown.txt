@@ -1,0 +1,23 @@
+exit=2
+--stdout--
+--stderr--
+spinstop: unknown command "frobnicate"
+
+spinstop — stop AI agents from spinning on repeated tool calls
+
+Usage:
+  spinstop replay <trace> [--config <file.json>] [--fail-on warn|block|stop] [--format table|json]
+  spinstop --help | --version
+
+replay  Feed a recorded run through the loop guard and show, per tool call,
+        what spinstop would have done (allow / warn / block / stop).
+
+Trace formats:
+  - AI SDK steps:  JSON.stringify(result.steps)  (or a result object with "steps")
+  - JSONL records: {"step":1,"toolName":"search","input":{...},"output":...,"isError":false}
+
+Options:
+  -c, --config   JSON file with LoopGuardOptions (window, escalation, near, cycle, noProgress, tools)
+      --fail-on  exit with code 1 if any call reaches this level (for CI)
+      --format   table (default) or json
+      --lang     en or ko: screen language (default: SPINSTOP_LANG, then LANG, else en)

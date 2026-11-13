@@ -13,8 +13,11 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const tmp = mkdtempSync(join(tmpdir(), 'spinstop-replay-'));
 after(() => rmSync(tmp, { recursive: true, force: true }));
 
+// 실행 환경의 로케일을 물려받지 않도록 언어 변수를 지우고 LANG=C 로 고정한다(한국어 로케일 CI 에서도 같은 결과).
 function cli(...args) {
-  const r = spawnSync(process.execPath, ['dist/cli.js', ...args], { cwd: root, encoding: 'utf8', timeout: 30_000 });
+  const env = { ...process.env };
+  for (const key of ['SPINSTOP_LANG', 'LANG', 'LC_ALL']) delete env[key];
+  const r = spawnSync(process.execPath, ['dist/cli.js', ...args], { cwd: root, encoding: 'utf8', timeout: 30_000, env: { ...env, LANG: 'C' } });
   return { code: r.status, out: r.stdout, err: r.stderr };
 }
 

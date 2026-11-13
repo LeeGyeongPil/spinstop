@@ -1,0 +1,4 @@
+exit=2
+--stdout--
+--stderr--
+spinstop: unrecognized JSON: expected AI SDK steps (an array of steps or { steps }) or tool-call records

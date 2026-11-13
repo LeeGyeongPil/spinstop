@@ -1,0 +1,4 @@
+exit=2
+--stdout--
+--stderr--
+spinstop: line 2: expected an object with "toolName"

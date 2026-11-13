@@ -1,0 +1,4 @@
+exit=2
+--stdout--
+--stderr--
+spinstop: test/fixtures/arr.json: config must be a JSON object

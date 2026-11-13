@@ -1,0 +1,4 @@
+exit=2
+--stdout--
+--stderr--
+spinstop: replay needs a trace file

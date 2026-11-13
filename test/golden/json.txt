@@ -1,0 +1,81 @@
+exit=0
+--stdout--
+{
+  "file": "examples/traces/stuck-search.steps.json",
+  "format": "ai-sdk-steps",
+  "steps": 7,
+  "calls": 7,
+  "rows": [
+    {
+      "step": 1,
+      "toolName": "search",
+      "callId": "call-1",
+      "action": "allow",
+      "wouldRun": true
+    },
+    {
+      "step": 2,
+      "toolName": "search",
+      "callId": "call-2",
+      "action": "allow",
+      "wouldRun": true
+    },
+    {
+      "step": 3,
+      "toolName": "search",
+      "callId": "call-3",
+      "action": "block",
+      "rule": "near-repeat",
+      "count": 3,
+      "message": "spinstop: search was called 3 times with nearly the same arguments and returned nothing new. The call was not run. Try a different approach or answer with what you have.",
+      "wouldRun": false
+    },
+    {
+      "step": 4,
+      "toolName": "search",
+      "callId": "call-4",
+      "action": "block",
+      "rule": "near-repeat",
+      "count": 4,
+      "message": "spinstop: search was called 4 times with nearly the same arguments and returned nothing new. The call was not run. Try a different approach or answer with what you have.",
+      "wouldRun": false
+    },
+    {
+      "step": 5,
+      "toolName": "search",
+      "callId": "call-5",
+      "action": "stop",
+      "rule": "near-repeat",
+      "count": 5,
+      "message": "spinstop: search was called 5 times with nearly the same arguments and returned nothing new. The call was not run and the run is being stopped.",
+      "wouldRun": false
+    },
+    {
+      "step": 6,
+      "toolName": "search",
+      "callId": "call-6",
+      "action": "stop",
+      "rule": "near-repeat",
+      "count": 5,
+      "message": "spinstop: search was called 5 times with nearly the same arguments and returned nothing new. The call was not run and the run is being stopped.",
+      "wouldRun": false
+    },
+    {
+      "step": 7,
+      "toolName": "search",
+      "callId": "call-7",
+      "action": "stop",
+      "rule": "near-repeat",
+      "count": 5,
+      "message": "spinstop: search was called 5 times with nearly the same arguments and returned nothing new. The call was not run and the run is being stopped.",
+      "wouldRun": false
+    }
+  ],
+  "stepEvents": [],
+  "firstIntervention": 3,
+  "firstBlock": 3,
+  "stopStep": 5,
+  "saved": 5,
+  "worst": "stop"
+}
+--stderr--

@@ -1,0 +1,4 @@
+exit=2
+--stdout--
+--stderr--
+spinstop: --fail-on must be warn, block or stop
