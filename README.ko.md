@@ -251,41 +251,43 @@ writeFileSync('run.steps.json', JSON.stringify(result.steps));
 ```
 
 ```bash
-npx spinstop replay examples/traces/stuck-search.steps.json --fail-on block; echo "exit=$?"
+npx spinstop --lang ko replay examples/traces/stuck-search.steps.json --fail-on block; echo "exit=$?"
 ```
 
-![막힌 검색 트레이스의 replay 표](docs/images/02-replay-stuck.png)
+![막힌 검색 트레이스의 replay 표](docs/images/02-replay-stuck.ko.png)
 
 *호출 7번, 타임스탬프와 어순만 바뀐 같은 검색입니다. 가드는 3번째 step 에서 차단했을 것이고 7번 중 5번의 실행을 아꼈을 것입니다. 스크린샷은 `node dist/cli.js` 로 찍었고 `npx spinstop` 과 같은 프로그램입니다.*
 
-텍스트 출력(머리 2줄과 마지막 `message at step 3: ...` 줄은 여기서 생략했습니다).
+텍스트 출력(머리 2줄과 마지막 `step 3 의 메시지: ...` 줄은 여기서 생략했습니다).
 
 ```text
-step  tool    action  rule         count  would run
-1     search  allow   -            -      yes
-2     search  allow   -            -      yes
-3     search  block   near-repeat  3      no
-4     search  block   near-repeat  4      no
-5     search  stop    near-repeat  5      no
-6     search  stop    near-repeat  5      no
-7     search  stop    near-repeat  5      no
+step  도구    조치   규칙         횟수  실행 여부
+1     search  allow  -            -     예
+2     search  allow  -            -     예
+3     search  block  near-repeat  3     아니오
+4     search  block  near-repeat  4     아니오
+5     search  stop   near-repeat  5     아니오
+6     search  stop   near-repeat  5     아니오
+7     search  stop   near-repeat  5     아니오
 
-first intervention: step 3 · first block: step 3 · stop: step 5
-saved 5 of 7 executions (calls the guard would not have run)
+첫 개입: step 3 · 첫 차단: step 3 · 중단: step 5
+실행 7회 중 5회 절약 (가드가 실행하지 않았을 호출)
 exit=1
 ```
 
 정상 실행은 조용해야 하고, CI 는 종료 코드로 그것을 알아챕니다.
 
 ```bash
-npx spinstop replay examples/traces/pagination-ok.jsonl --fail-on block; echo "exit=$?"
+npx spinstop --lang ko replay examples/traces/pagination-ok.jsonl --fail-on block; echo "exit=$?"
 ```
 
-![정상 페이지 넘김 트레이스의 replay: no loop detected](docs/images/03-replay-ok.png)
+![정상 페이지 넘김 트레이스의 replay: 맴도는 호출이 없습니다](docs/images/03-replay-ok.ko.png)
 
-*결과가 매번 새로운 `list_orders` 호출 8번: `no loop detected`, 종료 코드 0.*
+*결과가 매번 새로운 `list_orders` 호출 8번: `맴도는 호출이 없습니다`(영어 화면은 `no loop detected`), 종료 코드 0. 화면은 `--lang ko` 로 찍었습니다.*
 
-종료 코드: `0` 은 `--fail-on` 수준에 닿은 것이 없음, `1` 은 닿음, `2` 는 사용법·입력 오류입니다. 옵션: `--config <file.json>`(평범한 `LoopGuardOptions`, `examples/spinstop.config.json` 참고), `--fail-on warn|block|stop`, `--format table|json`. "saved" 는 상한값입니다. 실제 가드 실행에서는 모델이 차단 메시지를 보고 다르게 움직일 수 있습니다. 자세한 내용은 [docs/tuning.md](docs/tuning.md)(영어)에 있습니다.
+종료 코드: `0` 은 `--fail-on` 수준에 닿은 것이 없음, `1` 은 닿음, `2` 는 사용법·입력 오류입니다. 옵션: `--config <file.json>`(평범한 `LoopGuardOptions`, `examples/spinstop.config.json` 참고), `--fail-on warn|block|stop`, `--format table|json`, `--lang en|ko`. "saved" 는 상한값입니다. 실제 가드 실행에서는 모델이 차단 메시지를 보고 다르게 움직일 수 있습니다. 자세한 내용은 [docs/tuning.md](docs/tuning.md)(영어)에 있습니다.
+
+**화면 언어.** replay 화면(도움말·표·요약, 그리고 spinstop 이 직접 내는 CLI 오류)은 영어와 한국어로 볼 수 있습니다. `--lang en|ko`, 환경변수 `SPINSTOP_LANG`, `LANG` 순서로 우선하며, 한국어(`ko`, `ko-KR`, `ko_KR`, `ko_KR.UTF-8`)가 아니면 영어입니다. `--lang` 은 명령 앞이나 트레이스 뒤 어디에 써도 되고(`spinstop --lang ko replay run.steps.json`), 다른 값을 주면 종료 코드 `2` 로 끝납니다. `LC_ALL`, `LC_MESSAGES` 는 보지 않습니다. Node 가 내는 기본 오류(파일 없음, 알 수 없는 옵션, config JSON 파싱 오류)와 `--config` 검증 오류(라이브러리의 `TypeError` 문구)는 번역되지 않고 영어로 남습니다. 종료 코드, `--format json`, action·규칙 이름, 가드가 모델에게 보내는 메시지는 언어에 따라 바뀌지 않습니다. 한국어 로케일에서는 표 글자가 한국어이므로, 스크립트는 표를 파싱하지 말고 `--format json` 을 읽으세요.
 
 ## 함정
 
@@ -312,14 +314,14 @@ spinstop 이 하지 않는 것: 임베딩이나 LLM 기반 의미 유사도(결�
 ## 버전·호환성
 
 - 유의적 버전(SemVer)을 따릅니다. 0.x 동안은 마이너 버전에서 API 가 바뀔 수 있고, 바뀌면 [CHANGELOG.md](CHANGELOG.md)에 적습니다.
-- Node.js 22.23.4 와 26.13.0(둘 다 70개 테스트 통과), `ai` 7.0.169, `@openai/agents` 0.21.0, `zod` 4.6.7, TypeScript 6.0.3 으로 확인했습니다. Node 24 는 CI 에서만 확인합니다.
-- 로드맵(0.1.0 에 없음): 임계값을 비교하는 `replay --sweep`, near-repeat 의 토큰 유사도 옵션, `streamText`·`ToolLoopAgent` 예제, 실제 모델 예제.
+- Node.js 22.23.4 와 26.13.0(둘 다 모든 테스트 통과), `ai` 7.0.169, `@openai/agents` 0.21.0, `zod` 4.6.7, TypeScript 6.0.3 으로 확인했습니다. Node 24 는 CI 에서만 확인합니다.
+- 로드맵(이 버전에 없음): 임계값을 비교하는 `replay --sweep`, near-repeat 의 토큰 유사도 옵션, `streamText`·`ToolLoopAgent` 예제, 실제 모델 예제.
 
 ## 개발
 
 ```bash
 npm install
-npm test            # builds, then runs 70 tests (mock only, no key or network)
+npm test            # builds, then runs the tests (mock only, no key or network)
 npm run demo        # AI SDK demo
 npm run demo:agents # Agents JS demo
 npm run check:pack  # packs the tarball and imports the three entry points in an empty project

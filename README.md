@@ -285,7 +285,9 @@ npx spinstop replay examples/traces/pagination-ok.jsonl --fail-on block; echo "e
 
 *Eight `list_orders` calls with new results each time: `no loop detected`, exit code 0.*
 
-Exit codes: `0` nothing reached the `--fail-on` level, `1` something did, `2` usage or input error. Options: `--config <file.json>` (plain `LoopGuardOptions`, see `examples/spinstop.config.json`), `--fail-on warn|block|stop`, `--format table|json`. "Saved" is an upper bound: in a real guarded run the model sees the block message and may act differently. More in [docs/tuning.md](docs/tuning.md).
+Exit codes: `0` nothing reached the `--fail-on` level, `1` something did, `2` usage or input error. Options: `--config <file.json>` (plain `LoopGuardOptions`, see `examples/spinstop.config.json`), `--fail-on warn|block|stop`, `--format table|json`, `--lang en|ko`. "Saved" is an upper bound: in a real guarded run the model sees the block message and may act differently. More in [docs/tuning.md](docs/tuning.md).
+
+**Screen language.** The replay screen (help, table, summary, and the CLI errors spinstop itself raises) is available in English and Korean. Pick it with `--lang en|ko`, or the `SPINSTOP_LANG` environment variable, or `LANG` (in that order of priority); anything that is not Korean (`ko`, `ko-KR`, `ko_KR`, `ko_KR.UTF-8`) is English. `--lang` works before the command or after the trace (`spinstop --lang ko replay run.steps.json`) and any other value exits with code `2`. `LC_ALL` and `LC_MESSAGES` are not read. Errors raised by Node itself (missing file, unknown option, config JSON parse error) and the `--config` validation errors (the library's `TypeError` text) are not translated and stay in English. Exit codes, `--format json`, the action and rule names, and the message the guard sends to the model do not change with the language. On a Korean locale the table text is Korean, so scripts should read `--format json` instead of parsing the table.
 
 ## Pitfalls
 
@@ -312,14 +314,14 @@ Every demo and test here runs a **practice mock**: a scripted model that repeats
 ## Versions and compatibility
 
 - Semantic Versioning. While the version is 0.x, a minor release may change the API; changes are listed in [CHANGELOG.md](CHANGELOG.md).
-- Checked with Node.js 22.23.4 and 26.13.0 (all 70 tests pass on both), `ai` 7.0.169, `@openai/agents` 0.21.0, `zod` 4.6.7, TypeScript 6.0.3. Node 24 is covered by CI only.
-- Roadmap (not in 0.1.0): `replay --sweep` to compare thresholds, a token-similarity option for near-repeat, `streamText` and `ToolLoopAgent` examples, a real-model example.
+- Checked with Node.js 22.23.4 and 26.13.0 (all tests pass on both), `ai` 7.0.169, `@openai/agents` 0.21.0, `zod` 4.6.7, TypeScript 6.0.3. Node 24 is covered by CI only.
+- Roadmap (not in this version): `replay --sweep` to compare thresholds, a token-similarity option for near-repeat, `streamText` and `ToolLoopAgent` examples, a real-model example.
 
 ## Development
 
 ```bash
 npm install
-npm test            # builds, then runs 70 tests (mock only, no key or network)
+npm test            # builds, then runs the tests (mock only, no key or network)
 npm run demo        # AI SDK demo
 npm run demo:agents # Agents JS demo
 npm run check:pack  # packs the tarball and imports the three entry points in an empty project
