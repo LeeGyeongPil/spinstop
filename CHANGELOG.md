@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1]
+
+### Documentation
+
+- README install section (English and Korean) now explains the `npm install-scripts` warning from npm 11.20+, how to approve it with `npm install-scripts approve spinstop`, and the `ERR_MODULE_NOT_FOUND` symptom when `dist/` was not built. No code changes.
+
 ## [0.2.0]
 
 ### Added
@@ -23,5 +29,6 @@ First version.
 - Fix: `near.maskNumbers` now defaults to `'text'` (numbers are masked only inside multi-word text), so checking different order IDs or split files with equal results is no longer a near-repeat; `true` keeps the old mask-everything behavior.
 - `createLoopGuard`, `guardTools` and `spinstop replay --config` reject invalid options (non-positive or non-integer numbers, `escalation` not ordered `warn <= block <= stop`) with a `TypeError` that names the field.
 
+[0.2.1]: https://github.com/LeeGyeongPil/spinstop/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/LeeGyeongPil/spinstop/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/LeeGyeongPil/spinstop/releases/tag/v0.1.0
