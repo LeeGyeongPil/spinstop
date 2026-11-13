@@ -22,6 +22,10 @@ npm install github:LeeGyeongPil/spinstop
 
 The `prepare` script builds the package on install. Requires Node.js 22 or newer. If you do not have it: `brew install node` (macOS) or your distribution's package for Node 22+. Nothing else is needed on a minimal Linux image except `git` (for the GitHub install).
 
+npm 11.20 or newer prints a warning for this install (shortened here to its first line; the real output can span several lines): `npm warn install-scripts 1 package has install scripts not yet covered by allowScripts: spinstop@<version> (prepare: npm run build)`. The warning alone does not mean the build failed: with npm 11.20 `dist/` and the `spinstop` command can still be created. It means the `prepare` step, which compiles the TypeScript into `dist/`, is not yet covered by `allowScripts`. To approve it, run `npm install-scripts approve spinstop` (see `npm help install-scripts`); this pins the commit in the `allowScripts` entry of your `package.json`, so installing a different commit asks for approval again.
+
+Separate case: if the build did not run, `dist/` is missing. Importing `spinstop` then fails with `ERR_MODULE_NOT_FOUND` for `.../node_modules/spinstop/dist/index.js`, and the `spinstop` command is not created. Approve the script, delete `node_modules`, and run `npm install` again.
+
 Runtime dependencies: 0. The adapters import `ai` (`>=7 <8`) and `@openai/agents` (`^0.21.0`) only as types, and both are optional peer dependencies. The package is not published to the npm registry yet.
 
 To try it from a clone instead:

@@ -22,6 +22,10 @@ npm install github:LeeGyeongPil/spinstop
 
 설치할 때 `prepare` 스크립트가 빌드합니다. Node.js 22 이상이 필요합니다. 없다면 `brew install node`(macOS) 또는 배포판의 Node 22+ 패키지를 쓰세요. 최소 리눅스 이미지에서는 GitHub 설치를 위한 `git` 외에 더 필요한 것이 없습니다.
 
+npm 11.20 이상은 이 설치에서 경고를 띄웁니다(여기서는 첫 줄만 줄여 적었고 실제 출력은 여러 줄일 수 있습니다): `npm warn install-scripts 1 package has install scripts not yet covered by allowScripts: spinstop@<version> (prepare: npm run build)`. 경고만으로 빌드가 실패했다는 뜻은 아닙니다. npm 11.20 에서는 경고가 떠도 `dist/` 와 `spinstop` 명령이 생길 수 있습니다. TypeScript 를 `dist/` 로 빌드하는 `prepare` 단계가 아직 `allowScripts` 에 포함되지 않았다는 뜻입니다. 승인하려면 `npm install-scripts approve spinstop` 을 실행하세요(`npm help install-scripts` 참고). 이 명령은 `package.json` 의 `allowScripts` 에 해당 커밋을 고정하므로, 다른 커밋으로 올리면 다시 승인해야 합니다.
+
+별개의 경우: 빌드가 돌지 않으면 `dist/` 가 없습니다. 그러면 `spinstop` 을 import 할 때 `.../node_modules/spinstop/dist/index.js` 에 대해 `ERR_MODULE_NOT_FOUND` 로 실패하고 `spinstop` 명령도 생기지 않습니다. 스크립트를 승인한 뒤 `node_modules` 를 지우고 `npm install` 로 다시 설치하세요.
+
 런타임 의존성은 0개입니다. 어댑터는 `ai`(`>=7 <8`)와 `@openai/agents`(`^0.21.0`)를 타입으로만 가져오고, 둘 다 선택 peer 의존성입니다. 아직 npm 레지스트리에는 게시하지 않았습니다.
 
 clone 해서 써 보려면:
